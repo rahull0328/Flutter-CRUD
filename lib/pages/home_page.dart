@@ -5,17 +5,34 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage> {
+  //text controller
+  final TextEditingController textEditingController = TextEditingController();
 
   void openNoteBox() {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: TextField(),
-        )
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            content: TextField(controller: textEditingController),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  //adding the note
+                },
+                child: Text(
+                  "Add",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
     );
   }
 
@@ -31,15 +48,16 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.purpleAccent,
+        centerTitle: true,
+        backgroundColor: Colors.pinkAccent,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: openNoteBox,
-        backgroundColor: Colors.purpleAccent,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
+        backgroundColor: Colors.pinkAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30), // Adjust radius as needed
         ),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
