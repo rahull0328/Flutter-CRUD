@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   //text controller
   final TextEditingController textEditingController = TextEditingController();
 
-  void openNoteBox() {
+  void openNoteBox({String? docID}) {
     showDialog(
       context: context,
       builder:
@@ -27,7 +27,11 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(
                 onPressed: () {
                   //adding the note.
-                  fireStoreService.addNote(textEditingController.text);
+                  if (docID == null) {
+                    fireStoreService.addNote(textEditingController.text);
+                  } else {
+                    fireStoreService.updateNote(docID, textEditingController.text);
+                  }
 
                   // clear the text controller
                   textEditingController.clear();
@@ -52,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "NoteNest",
           style: TextStyle(
             color: Colors.white,
@@ -93,6 +97,10 @@ class _HomePageState extends State<HomePage> {
                   //display as a list tile
                   return ListTile(
                     title: Text(noteText),
+                    trailing: IconButton(
+                     onPressed: () => openNoteBox(docID: docID),
+                     icon: Icon(Icons.edit),
+                    ),
                   );
                 },
             );
