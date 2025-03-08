@@ -1,3 +1,4 @@
+import 'package:crud/services/firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,6 +9,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  //firestore
+  final FireStoreService fireStoreService = FireStoreService();
+
   //text controller
   final TextEditingController textEditingController = TextEditingController();
 
@@ -20,14 +25,20 @@ class _HomePageState extends State<HomePage> {
             actions: [
               ElevatedButton(
                 onPressed: () {
-                  //adding the note
+                  //adding the note.
+                  fireStoreService.addNote(textEditingController.text);
+
+                  // clear the text controller
+                  textEditingController.clear();
+
+                  //closing the alertBox
+                  Navigator.pop(context);
                 },
                 child: Text(
                   "Add",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    color: Colors.pinkAccent,
+                    fontSize: 18,
                   ),
                 ),
               ),
@@ -55,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: openNoteBox,
         backgroundColor: Colors.pinkAccent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // Adjust radius as needed
+          borderRadius: BorderRadius.circular(30),
         ),
         child: const Icon(Icons.add, color: Colors.white),
       ),
