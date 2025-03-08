@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud/services/firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -69,6 +70,36 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: const Icon(Icons.add, color: Colors.white),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: fireStoreService.getNotesStream(),
+        builder: (context, snapshot) {
+          //if notes are present
+          if (snapshot.hasData) {
+            List notesList = snapshot.data!.docs;
+            
+            //displaying data in the list
+            return ListView.builder(
+                itemCount: notesList.length,
+                itemBuilder: (context, index) {
+                  //getting each individual doc
+                  DocumentSnapshot documentSnapshot = notesList[index];
+                  String docID = documentSnapshot.id;
+
+                  //get note from each doc
+                  Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+                  String noteText = data['note'];
+
+                  //display as a list tile
+                  return ListTile(
+                    title: Text(noteText),
+                  );
+                },
+            );
+          } else {
+            return const Text("No Notes....");
+          }
+        },
       ),
     );
   }
