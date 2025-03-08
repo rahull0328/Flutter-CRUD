@@ -97,9 +97,20 @@ class _HomePageState extends State<HomePage> {
                   //display as a list tile
                   return ListTile(
                     title: Text(noteText),
-                    trailing: IconButton(
-                     onPressed: () => openNoteBox(docID: docID),
-                     icon: Icon(Icons.edit),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        //update button
+                        IconButton(
+                          onPressed: () => openNoteBox(docID: docID),
+                          icon: Icon(Icons.edit, color: Colors.green),
+                        ),
+                        //delete button
+                        IconButton(
+                          onPressed: () => fireStoreService.deleteNote(docID),
+                          icon: Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
                     ),
                   );
                 },
