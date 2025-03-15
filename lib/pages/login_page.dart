@@ -1,25 +1,55 @@
 import 'package:crud/components/my_button.dart';
 import 'package:crud/components/my_textfield.dart';
+import 'package:crud/helper/helper_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final void Function()? onTap;
 
-  LoginPage({
+  const LoginPage({
     super.key,
     required this.onTap,
   });
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   //text editing controller
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
 
   //login method
-  void login() {
-    
+  void login() async{
+    //show loading screen
+    showDialog(
+        context: context,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        )
+    );
+
+    //user login process
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text
+      );
+
+      //pop loading circle
+      if (context.mounted) Navigator.pop(context);
+    }
+
+    //display any errors
+    on FirebaseAuthException catch (e){
+      //pop loading circle
+      Navigator.pop(context);
+      displayMessageToUser(e.code, context);
+    }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +71,7 @@ class LoginPage extends StatelessWidget {
 
               //app name
               const Text(
-                "NotesNest",
+                "NoteNest",
                 style: TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 50),
@@ -94,7 +124,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: onTap,
+                    onTap: widget.onTap,
                     child: const Text(
                       " Register Here...",
                       style: TextStyle(

@@ -1,3 +1,4 @@
+import 'package:crud/auth/auth.dart';
 import 'package:crud/auth/login_or_register.dart';
 import 'package:crud/theme/dark_mode.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginOrRegister(),
+      home: const AuthPage(),
       theme: lightMode,
       darkTheme: darkMode,
     );

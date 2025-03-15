@@ -78,14 +78,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 size: 80,
                 color: Theme.of(context).colorScheme.inversePrimary,
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 15),
 
               //app name
               const Text(
                 "NotesNest",
                 style: TextStyle(fontSize: 20),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
 
               //username textField
               MyTextfield(
@@ -117,14 +117,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: true,
                   controller: confirmPasswordController
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
 
               //sign up button
               MyButton(
                 text: "Register",
                 onTap: registerUser,
               ),
-              const SizedBox(height: 25,),
+              const SizedBox(height: 10),
 
               //Already have an account register here
               Row(

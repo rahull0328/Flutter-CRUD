@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   "Add",
                   style: TextStyle(
-                    color: Colors.pinkAccent,
+                    color: Colors.deepPurple,
                     fontSize: 18,
                   ),
                 ),
@@ -50,6 +51,11 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
     );
+  }
+
+  // logout user
+  void logout() {
+    FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -65,11 +71,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.deepPurple,
+        actions: [
+          IconButton(
+            onPressed: () => logout,
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: openNoteBox,
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.deepPurple,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
