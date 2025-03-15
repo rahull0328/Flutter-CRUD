@@ -3,6 +3,12 @@ import 'package:crud/components/my_textfield.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+  final void Function()? onTap;
+
+  LoginPage({
+    super.key,
+    required this.onTap,
+  });
 
   //text editing controller
   final TextEditingController emailController = TextEditingController();
@@ -13,7 +19,7 @@ class LoginPage extends StatelessWidget {
     
   }
 
-  LoginPage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +94,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: onTap,
                     child: const Text(
                       " Register Here...",
                       style: TextStyle(
