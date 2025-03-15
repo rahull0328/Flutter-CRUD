@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.deepPurple,
         actions: [
           IconButton(
-            onPressed: () => logout,
+            onPressed: logout,
             icon: const Icon(Icons.logout),
           ),
         ],

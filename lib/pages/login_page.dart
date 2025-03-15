@@ -17,35 +17,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //text editing controller
+  // Text editing controllers
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
-  //login method
-  void login() async{
-    //show loading screen
+  // Login method
+  void login() async {
+    // Show loading screen
     showDialog(
-        context: context,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        )
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
 
-    //user login process
+    // User login process
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text
+        email: emailController.text,
+        password: passwordController.text,
       );
 
-      //pop loading circle
+      // Pop loading circle
       if (context.mounted) Navigator.pop(context);
-    }
-
-    //display any errors
-    on FirebaseAuthException catch (e){
-      //pop loading circle
+    } on FirebaseAuthException catch (e) {
+      // Pop loading circle
       Navigator.pop(context);
       displayMessageToUser(e.code, context);
     }
@@ -55,13 +51,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //logo
+              const SizedBox(height: 50),
+
+              // Logo
               Icon(
                 Icons.person,
                 size: 80,
@@ -69,58 +67,58 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 25),
 
-              //app name
+              // App name
               const Text(
                 "NoteNest",
                 style: TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 50),
 
-              //email textField
+              // Email textField
               MyTextfield(
-                  hintText: "Email",
-                  obscureText: false,
-                  controller: emailController
+                hintText: "Email",
+                obscureText: false,
+                controller: emailController,
               ),
               const SizedBox(height: 10),
 
-              //password textField
+              // Password textField
               MyTextfield(
-                  hintText: "Password",
-                  obscureText: true,
-                  controller: passwordController
+                hintText: "Password",
+                obscureText: true,
+                controller: passwordController,
               ),
               const SizedBox(height: 10),
 
-              //forgot password
+              // Forgot password
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
                     "Forgot Password?",
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary
+                      color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 25),
 
-              //sign in button
+              // Sign-in button
               MyButton(
-                  text: "Login",
-                  onTap: login,
+                text: "Login",
+                onTap: login,
               ),
-              const SizedBox(height: 25,),
+              const SizedBox(height: 25),
 
-              //don't have an account register here
+              // Don't have an account? Register here
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an Account ?",
+                    "Don't have an Account?",
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary
+                      color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                   ),
                   GestureDetector(
@@ -131,9 +129,11 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),

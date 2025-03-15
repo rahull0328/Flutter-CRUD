@@ -17,46 +17,44 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
-  //text editing controller
+  // Text editing controllers
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  //register method
+  // Register method
   void registerUser() async {
-    //show loading circle
+    // Show loading circle
     showDialog(
       context: context,
       builder: (context) => const Center(
-          child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(),
       ),
     );
-    //making sure passwords match
-    if(passwordController.text != confirmPasswordController.text) {
-      //pop loading circle
+
+    // Ensure passwords match
+    if (passwordController.text != confirmPasswordController.text) {
+      // Pop loading circle
       Navigator.pop(context);
 
-      //display error message
-      displayMessageToUser("Passwords don't Match!", context);
+      // Display error message
+      displayMessageToUser("Passwords don't match!", context);
     } else {
-      //try creating the user
       try {
-        //create the user
-        UserCredential? userCredential =
+        // Create the user
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text
+          email: emailController.text,
+          password: passwordController.text,
         );
 
-        //pop loading circle
+        // Pop loading circle
         Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
-        //pop loading circle
+        // Pop loading circle
         Navigator.pop(context);
 
-        //displaying error message to user
+        // Display error message
         displayMessageToUser(e.code, context);
       }
     }
@@ -66,13 +64,15 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //logo
+              const SizedBox(height: 50),
+
+              // Logo
               Icon(
                 Icons.person,
                 size: 80,
@@ -80,60 +80,60 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 15),
 
-              //app name
+              // App name
               const Text(
                 "NotesNest",
                 style: TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 30),
 
-              //username textField
+              // Username textField
               MyTextfield(
-                  hintText: "Username",
-                  obscureText: false,
-                  controller: usernameController
+                hintText: "Username",
+                obscureText: false,
+                controller: usernameController,
               ),
               const SizedBox(height: 10),
 
-              //email textField
+              // Email textField
               MyTextfield(
-                  hintText: "Email",
-                  obscureText: false,
-                  controller: emailController
+                hintText: "Email",
+                obscureText: false,
+                controller: emailController,
               ),
               const SizedBox(height: 10),
 
-              //password textField
+              // Password textField
               MyTextfield(
-                  hintText: "Password",
-                  obscureText: true,
-                  controller: passwordController
+                hintText: "Password",
+                obscureText: true,
+                controller: passwordController,
               ),
               const SizedBox(height: 10),
 
-              //confirm password textField
+              // Confirm password textField
               MyTextfield(
-                  hintText: "Confirm Password",
-                  obscureText: true,
-                  controller: confirmPasswordController
+                hintText: "Confirm Password",
+                obscureText: true,
+                controller: confirmPasswordController,
               ),
               const SizedBox(height: 15),
 
-              //sign up button
+              // Register button
               MyButton(
                 text: "Register",
                 onTap: registerUser,
               ),
               const SizedBox(height: 10),
 
-              //Already have an account register here
+              // Already have an account? Login here
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Already have an Account ?",
+                    "Already have an Account?",
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary
+                      color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                   ),
                   GestureDetector(
@@ -144,9 +144,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
