@@ -11,49 +11,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  //firestore
+  // Firestore service
   final FireStoreService fireStoreService = FireStoreService();
 
-  //text controller
+  // Text controller
   final TextEditingController textEditingController = TextEditingController();
 
-  void openNoteBox({String? docID}) {
+  // Open note dialog
+  void openNoteBox({String? docID, String? currentNote}) {
+    textEditingController.text = currentNote ?? '';
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            content: TextField(controller: textEditingController),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  //adding the note.
-                  if (docID == null) {
-                    fireStoreService.addNote(textEditingController.text);
-                  } else {
-                    fireStoreService.updateNote(docID, textEditingController.text);
-                  }
-
-                  // clear the text controller
-                  textEditingController.clear();
-
-                  //closing the alertBox
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Add",
-                  style: TextStyle(
-                    color: Colors.deepPurple,
-                    fontSize: 18,
-                  ),
-                ),
+      builder: (context) => AlertDialog(
+        content: TextField(controller: textEditingController),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              if (docID == null) {
+                fireStoreService.addNote(textEditingController.text, context);
+              } else {
+                fireStoreService.updateNote(docID, textEditingController.text, context);
+              }
+              textEditingController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "Add",
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontSize: 18,
               ),
-            ],
+            ),
           ),
+        ],
+      ),
     );
   }
 
-  // logout user
+  // Logout user
   void logout() {
     FirebaseAuth.instance.signOut();
   }
@@ -80,7 +75,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: openNoteBox,
+        onPressed: () => openNoteBox(),
         backgroundColor: Colors.deepPurple,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -90,45 +85,44 @@ class _HomePageState extends State<HomePage> {
       body: StreamBuilder<QuerySnapshot>(
         stream: fireStoreService.getNotesStream(),
         builder: (context, snapshot) {
-          //if notes are present
           if (snapshot.hasData) {
             List notesList = snapshot.data!.docs;
-            
-            //displaying data in the list
+
             return ListView.builder(
-                itemCount: notesList.length,
-                itemBuilder: (context, index) {
-                  //getting each individual doc
-                  DocumentSnapshot documentSnapshot = notesList[index];
-                  String docID = documentSnapshot.id;
+              itemCount: notesList.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot documentSnapshot = notesList[index];
+                String docID = documentSnapshot.id;
+                Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+                String noteText = data['note'];
 
-                  //get note from each doc
-                  Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-                  String noteText = data['note'];
-
-                  //display as a list tile
-                  return ListTile(
-                    title: Text(noteText),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        //update button
-                        IconButton(
-                          onPressed: () => openNoteBox(docID: docID),
-                          icon: Icon(Icons.edit, color: Colors.green),
-                        ),
-                        //delete button
-                        IconButton(
-                          onPressed: () => fireStoreService.deleteNote(docID),
-                          icon: Icon(Icons.delete, color: Colors.red),
-                        ),
-                      ],
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                  child: Card(
+                    elevation: 2,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      title: Text(noteText),
+                      trailing: Wrap(
+                        spacing: 8,
+                        children: [
+                          IconButton(
+                            onPressed: () => openNoteBox(docID: docID, currentNote: noteText),
+                            icon: const Icon(Icons.edit, color: Colors.green),
+                          ),
+                          IconButton(
+                            onPressed: () => fireStoreService.deleteNote(docID, context),
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                },
+                  ),
+                );
+              },
             );
           } else {
-            return const Text("No Notes....");
+            return const Center(child: Text("No Notes..."));
           }
         },
       ),
